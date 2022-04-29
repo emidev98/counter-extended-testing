@@ -17,8 +17,19 @@ mod test {
     };
     use std::vec;
 
+
+    /**
+        Validate that instantiate_default() return the expected values,
+        this method is useful because as it us a helper you may be tempted
+        to modify the data inside instantiate_default() which can break
+        further tests. This way if you see this test failing you can 
+        find that it is because something have been modified inside the helper. 
+    **/
     #[test]
     fn proper_initialization() {
+        // GIVEN properties inside instantiate_default()
+
+        // WHEN
         let (_s, info, res) = instantiate_default();
 
         // THEN
@@ -38,18 +49,22 @@ mod test {
         );
     }
 
+    /**
+        This test confirms that block time is stored correctly thanks to custom_mocked_env(),
+        when the method ExecuteMsg:Reset is executed.
+    **/
     #[test]
     fn reset_with_custom_mocked_env() {
         // GIVEN
         let (mut deps, info, _) = instantiate_default();
+        let msg = ExecuteMsg::Reset { count: 5 };
 
         // WHEN
-        let msg = ExecuteMsg::Reset { count: 5 };
         execute(deps.as_mut(), custom_mocked_env(), info, msg).unwrap();
-
-        // THEN
         let res = query(deps.as_ref(), mock_env(), QueryMsg::GetLastResetTime {}).unwrap();
         let value: LastResetTime = from_binary(&res).unwrap();
+
+        // THEN
         assert_eq!(Some(Timestamp::from_nanos(10)), value.last_reset_time);
     }
 
@@ -58,9 +73,9 @@ mod test {
         // GIVEN
         let (deps, _, _) = instantiate_with_custom_querier();
         let req: QueryRequest<_> = QueryMsg::GetLastResetTime {}.into();
+        let wrapper = QuerierWrapper::new(&deps.querier);
 
         // WHEN
-        let wrapper = QuerierWrapper::new(&deps.querier);
         let response: LastResetTime = wrapper.custom_query(&req).unwrap();
 
         // THEN
