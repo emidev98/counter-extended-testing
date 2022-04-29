@@ -1,0 +1,10 @@
+{
+  "testnet": {
+    "counter": {
+      "codeId": "68059",
+      "contractAddresses": {
+        "default": "terra1f056jzxdfsn9crpf86r975uppjweje5ujjcjnf"
+      }
+    }
+  }
+}
