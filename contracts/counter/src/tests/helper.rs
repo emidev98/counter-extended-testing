@@ -5,16 +5,16 @@ use cosmwasm_std::{
 
 use crate::{
     contract::instantiate,
-    msg::{InstantiateMsg, QueryMsg}
+    msg::{InstantiateMsg, QueryMsg},
 };
 
-/** 
-    Instantiate the contract with count as 25 and owner as "creator".
-    
-    Returns contract dependencies, the message that was send to instantiate 
-    the contract and the response from instantiate method. 
+/**
+    Instantiate the contract with count = 25 and owner = "creator".
 
+    Returns the contract dependencies, instantiation message and response from
+    instantiate method.
 **/
+
 pub fn instantiate_default() -> (
     OwnedDeps<MockStorage, MockApi, MockQuerier>,
     MessageInfo,
@@ -28,14 +28,13 @@ pub fn instantiate_default() -> (
     (deps, info, res)
 }
 
-/** 
-    Instantiate the contract with count as 25 and owner as "creator".
-    
-    Returns contract dependencies with MockQuerier used to mock the 
-    requests to QueryMsg, the message that was send to instantiate 
-    the contract and the response from instantiate method. 
+/**
+    Instantiate the contract with count = 25 and owner = "creator".
 
+    Returns contract dependencies (including the QueryMsg mocked by MockQuerier),
+    the instantiation message and the response from instantiate method.
 **/
+
 pub fn instantiate_with_custom_querier() -> (
     OwnedDeps<MockStorage, MockApi, MockQuerier<QueryMsg>>,
     MessageInfo,
@@ -50,18 +49,18 @@ pub fn instantiate_with_custom_querier() -> (
 }
 
 /**
-    Private function used to inject the custom_query_msg with mocked data.
-    Mocked data can be found in a different file because depending of your
-    smart contract can ba very large file.
+    Private function used to inject the custom_query_msg into the mocked data.
+    This mocked data is stored in a different file because filze size contraints.
 
     Returns contract dependencies with custom_mocked_data
 **/
-fn custom_mock_dependencies(contract_balance: &[Coin]) -> 
-    OwnedDeps<MockStorage, MockApi, MockQuerier<QueryMsg>> 
-{
+fn custom_mock_dependencies(
+    contract_balance: &[Coin],
+) -> OwnedDeps<MockStorage, MockApi, MockQuerier<QueryMsg>> {
     let custom_querier: MockQuerier<QueryMsg> =
-        MockQuerier::new(&[("counter_contract", contract_balance)])
-            .with_custom_handler(|query| SystemResult::Ok(crate::tests::query_mocks::custom_query_msg(query)));
+        MockQuerier::new(&[("counter_contract", contract_balance)]).with_custom_handler(|query| {
+            SystemResult::Ok(crate::tests::query_mocks::custom_query_msg(query))
+        });
 
     OwnedDeps {
         storage: MockStorage::default(),

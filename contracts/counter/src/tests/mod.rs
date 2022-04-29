@@ -17,13 +17,11 @@ mod test {
     };
     use std::vec;
 
-
     /**
-        Validate that instantiate_default() return the expected values,
-        this method is useful because as it us a helper you may be tempted
-        to modify the data inside instantiate_default() which can break
-        further tests. This way if you see this test failing you can 
-        find that it is because something have been modified inside the helper. 
+        Validate that instantiate_default() return the expected values, this method
+        is useful because it ensures that the data inside instantiate_default() isn't modified
+        which risks breaking further tests. If this test fails it indicates that something have
+        been modified inside the helper.
     **/
     #[test]
     fn proper_initialization() {
@@ -50,7 +48,7 @@ mod test {
     }
 
     /**
-        This test confirms that block time is stored correctly thanks to custom_mocked_env(),
+        This test confirms that block time is stored properly as a result of custom_mocked_env()
         when the method ExecuteMsg:Reset is executed.
     **/
     #[test]
